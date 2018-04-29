@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChecker", "WebChecker\WebChecker.csproj", "{9CE04FB7-9D07-4BE0-956B-759F0CC80DEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CE04FB7-9D07-4BE0-956B-759F0CC80DEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CE04FB7-9D07-4BE0-956B-759F0CC80DEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CE04FB7-9D07-4BE0-956B-759F0CC80DEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CE04FB7-9D07-4BE0-956B-759F0CC80DEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
