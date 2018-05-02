@@ -8,6 +8,5 @@
   <ItemGroup>
     <None Include="**/*" />
     <None Include="**/*" />
-    <None Include="**/*" />
   </ItemGroup>
 </Project>
