@@ -13,14 +13,11 @@ namespace WebChecker
         static void Main(string[] args)
         {
             Console.WriteLine("Wellcom to my home !!");
-            WebPage webPage = new WebPage();
-            webPage.outputHTMLfile();
-            webPage.dispURL();
+
 
             TimerProgram tm = new TimerProgram();
             tm.initLoop();
             tm.loopstart();
-            webPage.dispURL();
 
         }
     }
@@ -88,7 +85,7 @@ namespace WebChecker
 
 
         /* 取得したファイル内容を書きだす */
-        public void outputHTMLfile(){
+        public String outputHTMLfile(){
             String outputFilePath;
             String filePath;
             /* 出力Pathを作る */
@@ -107,7 +104,7 @@ namespace WebChecker
             /* 出力処理 */
             getWebPage(outputFilePath);
 
-
+            return outputFilePath;
         }
 
         /* 出力するファイル名を返す */
@@ -183,10 +180,13 @@ namespace WebChecker
     class TimerProgram{
         Timer timer;
         LogFile logFile = new LogFile();
+        IntervalBatch ib = new IntervalBatch();
 
         public void initLoop(){
             logFile.newestFilePath = "Default";
             logFile.upDate("Default");
+
+            ib.initIntervalBatch(ref logFile);
         }
         public void loopstart(){
             //http://takachan.hatenablog.com/entry/2017/09/09/225342
@@ -201,9 +201,11 @@ namespace WebChecker
                     timer.Stop(); // もしくは timer.Enabled = false;
 
                     // 何らかの処理
-                    Console.WriteLine("Ticks = " + DateTime.Now.Ticks);
-                    logFile.upDate(timer.Interval.ToString());
-                    logFile.dispPath();
+                    Console.WriteLine("Ticks = " + DateTime.Now);
+                    //logFile.upDate(timer.Interval.ToString());
+                    //ib.testmethod();
+                    ib.IntervalMain();
+
                     this.setInterval();
 
                 }
@@ -233,6 +235,27 @@ namespace WebChecker
     }
 
     class IntervalBatch{
+        LogFile rLf;
+        WebPage webPage;
+
+
+
+        public void initIntervalBatch(ref LogFile lf){
+            this.rLf = lf;
+            webPage = new WebPage();
+        }
+        public void testmethod(){
+            Console.WriteLine("[internalBatch]--->");
+            rLf.dispPath();
+            Console.WriteLine("[internalBatch]<---");
+        }
+        public void IntervalMain(){
+            /* 周期的に実行する処理 */
+            String opfp = webPage.outputHTMLfile();
+            rLf.upDate(opfp);
+            rLf.dispPath();
+            //webPage.dispURL();
+        }
         
     }
 
