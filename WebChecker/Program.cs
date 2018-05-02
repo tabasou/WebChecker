@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;  // for Encoding
+using System.Timers;
 
 
 
@@ -14,6 +15,10 @@ namespace WebChecker
             Console.WriteLine("Wellcom to my home !!");
             WebPage webPage = new WebPage();
             webPage.outputHTMLfile();
+            webPage.dispURL();
+
+            TimerProgram tm = new TimerProgram();
+            tm.loopstart();
             webPage.dispURL();
 
         }
@@ -159,6 +164,52 @@ namespace WebChecker
         #endregion
 
     }
+
+    class TimerProgram{
+        Timer timer;
+
+        public void loopstart(){
+            // 開始時に間隔を指定する
+            timer = new Timer(1000/*msec*/);
+
+            // Elapsedイベントにタイマー発生時の処理を設定する
+            timer.Elapsed += (sender, e) =>
+            {
+                try
+                {
+                    timer.Stop(); // もしくは timer.Enabled = false;
+
+                    // 何らかの処理
+                    Console.WriteLine("Ticks = " + DateTime.Now.Ticks);
+                    this.setInterval();
+
+                }
+                finally
+                {
+                    timer.Start(); // もしくは timer.Enabled = true;
+                }
+            };
+
+            // タイマーを開始する
+            timer.Start();
+
+            Console.ReadLine();
+
+            // タイマーを停止する
+            timer.Stop();
+
+            // 資源の解放
+            using (timer) { }
+
+        }
+
+        /* 次の起動までの時間をセットする */
+        public void setInterval(){
+            timer.Interval += 1000;
+        }
+    }
+
+
 
     class DifferenceDitector
     {
