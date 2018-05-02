@@ -18,12 +18,27 @@ namespace WebChecker
             webPage.dispURL();
 
             TimerProgram tm = new TimerProgram();
+            tm.initLoop();
             tm.loopstart();
             webPage.dispURL();
 
         }
     }
     #region WebPage_class
+
+    class LogFile{
+        public String prevFilePath { get; set; }
+        public String newestFilePath { get; set; }
+
+        public void upDate(String newFilePath){
+            prevFilePath = newestFilePath;
+            newestFilePath = newFilePath;
+        }
+        public void dispPath(){
+            Console.WriteLine("Pre:" + prevFilePath);
+            Console.WriteLine("Now:" + newestFilePath);
+        }
+    }
     class WebPage
     {
         String PageURL = "";
@@ -167,8 +182,14 @@ namespace WebChecker
 
     class TimerProgram{
         Timer timer;
+        LogFile logFile = new LogFile();
 
+        public void initLoop(){
+            logFile.newestFilePath = "Default";
+            logFile.upDate("Default");
+        }
         public void loopstart(){
+            //http://takachan.hatenablog.com/entry/2017/09/09/225342
             // 開始時に間隔を指定する
             timer = new Timer(1000/*msec*/);
 
@@ -181,6 +202,8 @@ namespace WebChecker
 
                     // 何らかの処理
                     Console.WriteLine("Ticks = " + DateTime.Now.Ticks);
+                    logFile.upDate(timer.Interval.ToString());
+                    logFile.dispPath();
                     this.setInterval();
 
                 }
@@ -209,7 +232,9 @@ namespace WebChecker
         }
     }
 
-
+    class IntervalBatch{
+        
+    }
 
     class DifferenceDitector
     {
