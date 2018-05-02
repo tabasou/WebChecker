@@ -191,7 +191,7 @@ namespace WebChecker
         public void loopstart(){
             //http://takachan.hatenablog.com/entry/2017/09/09/225342
             // 開始時に間隔を指定する
-            timer = new Timer(1000/*msec*/);
+            timer = new Timer(10000/*msec*/);
 
             // Elapsedイベントにタイマー発生時の処理を設定する
             timer.Elapsed += (sender, e) =>
@@ -230,31 +230,44 @@ namespace WebChecker
 
         /* 次の起動までの時間をセットする */
         public void setInterval(){
-            timer.Interval += 1000;
+            timer.Interval += 100;
         }
     }
 
     class IntervalBatch{
         LogFile rLf;
         WebPage webPage;
-
+        DifferenceDitector differenceDitector;
 
 
         public void initIntervalBatch(ref LogFile lf){
             this.rLf = lf;
             webPage = new WebPage();
+            differenceDitector = new DifferenceDitector();
         }
+
         public void testmethod(){
             Console.WriteLine("[internalBatch]--->");
             rLf.dispPath();
             Console.WriteLine("[internalBatch]<---");
         }
         public void IntervalMain(){
-            /* 周期的に実行する処理 */
+            /* 周期的に実行する一連の処理をここに書く */
+
+            // Webページをチェックしてファイルに出力する
             String opfp = webPage.outputHTMLfile();
+
+            //比較する２つのファイルのPathをセットする
             rLf.upDate(opfp);
-            rLf.dispPath();
-            //webPage.dispURL();
+            differenceDitector.setCompareFilePath(rLf.prevFilePath, rLf.newestFilePath);
+
+            //比較して結果に応じて処理を振り分ける
+            if(differenceDitector.CompareRawText()){
+                Console.WriteLine("same !!");
+            }else{
+                Console.WriteLine("Different !!");
+            }
+
         }
         
     }
@@ -262,9 +275,13 @@ namespace WebChecker
     class DifferenceDitector
     {
         /* 指定されたPathのファイルを読み取って違いがあるか調べるクラス */
-        public String oldFilePath { get; set; }
-        public String newestFilePath { get; set; }
+        private String oldFilePath { get; set; }
+        private String newestFilePath { get; set; }
 
+        public void setCompareFilePath(String oldpath, String newpath){
+            oldFilePath = oldpath;
+            newestFilePath = newpath;
+        }
         /* ファイルが存在するか確認する */
         private bool CheckFileExist(){
             bool bRtn = false;
@@ -280,7 +297,7 @@ namespace WebChecker
         public bool CompareRawText(){
             bool bRtn = false;
             /* ファイルの存在チェック */
-            if(bRtn = CheckFileExist()){
+            if((bRtn = CheckFileExist()) != true){
                 return bRtn;
             }
             /* ファイルの比較 */
