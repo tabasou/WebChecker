@@ -4,6 +4,7 @@ using System.Text;  // for Encoding
 
 
 
+
 namespace WebChecker
 {
     class Program
@@ -64,12 +65,14 @@ namespace WebChecker
         {
             Console.WriteLine(PageURL);
         }
+
+
         /* 取得したファイル内容を書きだす */
         public void outputHTMLfile(){
             String outputFilePath;
             String filePath;
             /* 出力Pathを作る */
-            filePath = "~/WebCheckerLog/";
+            filePath = "Log/";
             filePath += midDomain();
 
             /*  */
@@ -82,6 +85,8 @@ namespace WebChecker
             Console.WriteLine(outputFilePath);
 
 
+            getWebPage(outputFilePath);
+
 
 
         }
@@ -91,7 +96,7 @@ namespace WebChecker
             String filename = "defaultfilename.html";
 
             DateTime now = DateTime.Now;
-            filename = now.ToString("yyyyMMdd HHmmss") + ".html";
+            filename = now.ToString("yyyyMMdd_HHmmss") + ".txt";
 
             return filename;
         }
@@ -123,6 +128,32 @@ namespace WebChecker
             DomainName = PageURL.Substring(start+splitterStrt.Length, (end - (start + splitterStrt.Length)) + 1);
 
             return DomainName;
+        }
+
+        void getWebPage(string opfpath)
+        {
+            //opfpath = "test.html";
+            if (Directory.Exists(System.IO.Path.GetDirectoryName(opfpath) + "/"))
+            {
+                ;
+            }
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(opfpath) + "/");
+
+            StreamWriter writer = new StreamWriter(opfpath,
+                                       false,  // 上書き （ true = 追加 ）
+                                       Encoding.GetEncoding("UTF-8"));
+
+            //writer.WriteLine("testdata");
+            //writer.Close();
+
+            System.Net.WebClient client = new System.Net.WebClient();
+            //client.Encoding = System.Text.Encoding.shift_jis;
+            string str = client.DownloadString(PageURL);
+            client.Dispose();
+
+            writer.Write(str);
+            writer.Close();
+
         }
 
 
