@@ -182,6 +182,7 @@ namespace WebChecker
         LogFile logFile = new LogFile();
         IntervalBatch ib = new IntervalBatch();
         int LoopCounter;
+        Random cRandom;
 
         public void initLoop(){
             logFile.newestFilePath = "Default";
@@ -189,6 +190,7 @@ namespace WebChecker
 
             ib.initIntervalBatch(ref logFile);
             LoopCounter = 0;
+            cRandom = new System.Random();
 
             Console.WriteLine("StartProgram : " + DateTime.Now);
         }
@@ -235,7 +237,7 @@ namespace WebChecker
 
         /* 次の起動までの時間をセットする */
         public void setInterval(){
-            timer.Interval += 1000;
+            timer.Interval = disideNextInterval();
 
             DateTime dt1 = DateTime.Now;
 
@@ -249,6 +251,52 @@ namespace WebChecker
 
 
 
+        }
+        private int disideNextInterval(){
+            const int Base_Interval_minuts = 15;    //基本インターバル（分）
+            const int Base_Minus_minuts = 5;        //基本マイナス幅（分）
+            const int Base_Plus_minuts = 5;         //基本プラス幅（分）
+
+            int Base_Interval_msec = Base_Interval_minuts * 60 * 1000;          //基本インターバル（ミリ秒）
+            int Base_Minus_msec = Base_Minus_minuts * 60 * 1000;
+            int Base_Plus_msec = Base_Plus_minuts * 60 * 1000;
+
+            int tmpNextInterval = disideNextInterval_msec(Base_Interval_msec, Base_Minus_msec, Base_Plus_msec);
+
+            //除外スケジュール
+            DateTime dt1 = DateTime.Now;
+            DateTime dt2;
+            TimeSpan ts1;
+            bool bFlag = true;
+            int wcounter = 0;
+
+            while(bFlag){
+                ts1 = new TimeSpan(0, 0, 0, (int)(tmpNextInterval / 1000));
+                dt2 = dt1 + ts1;
+
+                int nextHour = dt2.Hour;
+                //夜中０時から４時台は起動しない
+                if((0 <= nextHour) && (nextHour <= 4)){
+                    tmpNextInterval += Base_Interval_msec;
+                    wcounter++;
+                }else{
+                    bFlag = false;
+                }
+
+                if(wcounter >= (24*60 / Base_Interval_minuts)){
+                    bFlag = false;
+                }
+
+            }
+
+
+            return tmpNextInterval;
+        }
+        private int disideNextInterval_msec(int base_msec, int minus_msec, int plus_msec){
+            //http://jeanne.wankuma.com/tips/csharp/random/next.html
+            int iResult3 = cRandom.Next(base_msec - minus_msec, base_msec + plus_msec);
+
+            return iResult3;
         }
     }
 
