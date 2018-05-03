@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;  // for Encoding
 using System.Timers;
-
+using System.Net.Mail;
 
 
 
@@ -34,6 +34,12 @@ namespace WebChecker
         public void dispPath(){
             Console.WriteLine("Pre:" + prevFilePath);
             Console.WriteLine("Now:" + newestFilePath);
+        }
+        public String prevFileName(){
+            return Path.GetFileName(prevFilePath);
+        }
+        public String newestFileName(){
+            return Path.GetFileName(newestFilePath);
         }
     }
     class WebPage
@@ -256,12 +262,14 @@ namespace WebChecker
         LogFile rLf;
         WebPage webPage;
         DifferenceDitector differenceDitector;
+        GMailSender gMailSender;
 
 
         public void initIntervalBatch(ref LogFile lf){
             this.rLf = lf;
             webPage = new WebPage();
             differenceDitector = new DifferenceDitector();
+            gMailSender = new GMailSender();
         }
 
         public void testmethod(){
@@ -284,6 +292,10 @@ namespace WebChecker
                 Console.WriteLine("same !!");
             }else{
                 Console.WriteLine("Different !!");
+                Console.WriteLine("opendiff " + rLf.prevFileName() + " " + rLf.newestFileName());
+                gMailSender.setBody("new Item !?");
+                gMailSender.setSubject("testTitle");
+                gMailSender.sendExe();
             }
 
         }
@@ -379,5 +391,98 @@ namespace WebChecker
         }
 
     }
+
+
+    class GMailSender{
+        //https://qiita.com/rrryutaro/items/d746e0e8197ce36a14fe
+
+        const string mailsettingFilePath = "../../setting.txt";
+        private string mailID;
+        private string mailPassword;
+        private string mailFrom;
+        private string mailTo;
+        private string mailSubject;
+        private string mailBody;
+
+        public void setBody(String body)
+        {
+            mailBody = body;
+        }
+        public void setSubject(String Sbjct)
+        {
+            mailSubject = Sbjct;
+        }
+        public void sendExe(){
+            this.setMailInfo();
+            this.SendMail();
+        }
+
+        private void setMailInfo(){
+            int lineNo = 0;
+            /* ファイルからメール送信のための情報を取得する */
+            if (File.Exists(mailsettingFilePath))
+            {
+                StreamReader reader = new StreamReader(mailsettingFilePath,
+                                           Encoding.GetEncoding("UTF-8"));
+                string A;
+                while ((A = reader.ReadLine()) != null)
+                {
+                    /* 読み込んだ１行分のテキスト A の処理 */
+                    String label = A.Substring(0, A.IndexOf(":"));
+                    switch(label){
+                        case "mailID":
+                            mailID = A.Substring(A.IndexOf(":")+1, A.Length - (A.IndexOf(":") + 1));
+                            lineNo += 1;
+                            break;
+                        case "mailPassword":
+                            mailPassword = A.Substring(A.IndexOf(":") + 1, A.Length - (A.IndexOf(":") + 1));
+                            lineNo += 2;
+                            break;
+                        case "mailFrom":
+                            mailFrom = A.Substring(A.IndexOf(":") + 1, A.Length - (A.IndexOf(":") + 1));
+                            lineNo += 4;
+                            break;
+                        case "mailTo":
+                            mailTo = A.Substring(A.IndexOf(":") + 1, A.Length - (A.IndexOf(":") + 1));
+                            lineNo += 8;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                reader.Close();
+            }
+            else
+            {  /* ファイルがなければ標準入力 */
+                Console.WriteLine("Can't find file ! enter url");
+
+            }
+        }
+
+        private void SendMail()
+        {
+            try
+            {
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+
+                smtp.Credentials = new System.Net.NetworkCredential(mailID, mailPassword);
+                smtp.EnableSsl = true;
+                MailMessage msg = new MailMessage(mailFrom, mailTo, mailSubject, mailBody);
+                smtp.Send(msg);
+
+                Console.WriteLine($"{mailTo} にメール送信しました。");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+ 
+    }
+
+
+
     #endregion
 }
