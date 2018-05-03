@@ -1,10 +1,10 @@
-/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.csproj.CoreCompileInputs.cache
-/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.AssemblyInfoInputs.cache
-/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.AssemblyInfo.cs
 /Users/RD/Projects/WebChecker/WebChecker/bin/Debug/netcoreapp2.0/WebChecker.deps.json
 /Users/RD/Projects/WebChecker/WebChecker/bin/Debug/netcoreapp2.0/WebChecker.runtimeconfig.json
 /Users/RD/Projects/WebChecker/WebChecker/bin/Debug/netcoreapp2.0/WebChecker.runtimeconfig.dev.json
 /Users/RD/Projects/WebChecker/WebChecker/bin/Debug/netcoreapp2.0/WebChecker.dll
 /Users/RD/Projects/WebChecker/WebChecker/bin/Debug/netcoreapp2.0/WebChecker.pdb
+/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.csproj.CoreCompileInputs.cache
+/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.AssemblyInfoInputs.cache
+/Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.AssemblyInfo.cs
 /Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.dll
 /Users/RD/Projects/WebChecker/WebChecker/obj/Debug/netcoreapp2.0/WebChecker.pdb

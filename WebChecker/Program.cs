@@ -181,17 +181,21 @@ namespace WebChecker
         Timer timer;
         LogFile logFile = new LogFile();
         IntervalBatch ib = new IntervalBatch();
+        int LoopCounter;
 
         public void initLoop(){
             logFile.newestFilePath = "Default";
             logFile.upDate("Default");
 
             ib.initIntervalBatch(ref logFile);
+            LoopCounter = 0;
+
+            Console.WriteLine("StartProgram : " + DateTime.Now);
         }
         public void loopstart(){
             //http://takachan.hatenablog.com/entry/2017/09/09/225342
             // 開始時に間隔を指定する
-            timer = new Timer(10000/*msec*/);
+            timer = new Timer(1000/*msec*/);
 
             // Elapsedイベントにタイマー発生時の処理を設定する
             timer.Elapsed += (sender, e) =>
@@ -201,12 +205,13 @@ namespace WebChecker
                     timer.Stop(); // もしくは timer.Enabled = false;
 
                     // 何らかの処理
-                    Console.WriteLine("Ticks = " + DateTime.Now);
+                    //Console.WriteLine("Ticks = " + DateTime.Now);
                     //logFile.upDate(timer.Interval.ToString());
                     //ib.testmethod();
                     ib.IntervalMain();
 
                     this.setInterval();
+                    LoopCounter++;
 
                 }
                 finally
@@ -230,7 +235,20 @@ namespace WebChecker
 
         /* 次の起動までの時間をセットする */
         public void setInterval(){
-            timer.Interval += 100;
+            timer.Interval += 1000;
+
+            DateTime dt1 = DateTime.Now;
+
+            TimeSpan ts1 = new TimeSpan(0, 0, 0, (int)(timer.Interval / 1000));
+            //TimeSpan ts1 = new TimeSpan(0, 0, 0, 500);
+            //TimeSpan ts1 = new TimeSpan(1, 2, 45, 15);
+
+            DateTime dt2 = dt1 + ts1;
+            Console.WriteLine("now is        " + dt1.ToString());
+            Console.WriteLine("next check is " + dt2.ToString());
+
+
+
         }
     }
 
