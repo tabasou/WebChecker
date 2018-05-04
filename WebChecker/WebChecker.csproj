@@ -8,4 +8,7 @@
   <ItemGroup>
     <None Include="**/*" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Log\www.apple.com\" />
+  </ItemGroup>
 </Project>
